@@ -19,6 +19,7 @@ class SideMenu: NSObject, SideMenuDelegate {
     let barWidth:CGFloat = 200.0
     let sideBarTableTopInset:CGFloat = 64.0
     let sideBarContainerView:UIView = UIView()
+    let sideBarFooter:UIView = UIView()
     let sideMenuTable:SideMenuTable = SideMenuTable()
     var originView:UIView?
     
@@ -36,6 +37,11 @@ class SideMenu: NSObject, SideMenuDelegate {
         sideMenuTable.tableData = menuItems
         
         setupSideMenu()
+        
+        let rowToSelect:NSIndexPath = NSIndexPath(forRow: 0, inSection: 0);
+        sideMenuTable.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None);
+        sideMenuTable.tableView(sideMenuTable.tableView, didSelectRowAtIndexPath: rowToSelect);
+        didSelectSideMenuRow(rowToSelect)
         animator = UIDynamicAnimator(referenceView: originView!)
         
         let showGestureRecognizer:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "handleSwipe:")
@@ -54,11 +60,11 @@ class SideMenu: NSObject, SideMenuDelegate {
         sideBarContainerView.clipsToBounds = false
         originView!.addSubview(sideBarContainerView)
         
-        let blurView: UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+        let blurView: UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Light))
         blurView.frame = sideBarContainerView.bounds
         sideBarContainerView.addSubview(blurView)
         sideMenuTable.delegate = self
-        sideMenuTable.tableView.frame = sideBarContainerView.bounds
+        sideMenuTable.tableView.frame = CGRectMake(0 , originView!.frame.origin.y, sideBarContainerView.frame.width, sideBarContainerView.frame.height - 40)
         sideMenuTable.tableView.clipsToBounds = false
         sideMenuTable.tableView.backgroundColor = UIColor.clearColor()
         sideMenuTable.tableView.scrollsToTop = false
@@ -66,6 +72,20 @@ class SideMenu: NSObject, SideMenuDelegate {
         sideMenuTable.tableView.contentInset = UIEdgeInsetsMake(sideBarTableTopInset, 0, 0, 0)
         sideMenuTable.tableView.reloadData()
         sideBarContainerView.addSubview(sideMenuTable.tableView)
+        sideBarFooter.frame = CGRectMake(0 , sideBarContainerView.frame.height-40, sideBarContainerView.frame.width, 40)
+        sideBarFooter.backgroundColor = UIColor.brownColor()
+        
+        let imageName = "settings.png"
+        let image = UIImage(named: imageName)
+        let settingsBtn = UIButton()
+        settingsBtn.frame = CGRect(x: 5, y: 5, width: 30, height: 30)
+        settingsBtn.setBackgroundImage(image, forState: UIControlState.Normal)
+        settingsBtn.addTarget(self, action: "settingsBtnClicked:", forControlEvents: UIControlEvents.TouchUpInside)
+
+        sideBarFooter.addSubview(settingsBtn)
+        
+        sideBarContainerView.addSubview(sideBarFooter)
+
     }
     
     
@@ -107,4 +127,9 @@ class SideMenu: NSObject, SideMenuDelegate {
         animator.addBehavior(sideBarBehavior)
         
     }
+    
+    func settingsBtnClicked(sender:UIButton!){
+        println("Settings Button Clicked!!!")
+    }
+
 }

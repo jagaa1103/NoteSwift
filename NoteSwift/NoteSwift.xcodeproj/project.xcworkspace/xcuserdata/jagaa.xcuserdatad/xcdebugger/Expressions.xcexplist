@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "NoteSwift.NotesPageController.didSelectSideMenuRow (NoteSwift.NotesPageController)(ObjectiveC.NSIndexPath) -&gt; ():NotesPageController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NoteView.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

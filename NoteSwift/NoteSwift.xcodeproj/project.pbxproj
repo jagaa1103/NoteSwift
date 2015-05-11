@@ -34,6 +34,8 @@
 		112A513E1AFDF41C004FA5C3 /* NotesPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112A513D1AFDF41C004FA5C3 /* NotesPageController.swift */; };
 		1143015B1AFEFDA8005581AE /* SideMenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1143015A1AFEFDA8005581AE /* SideMenuTable.swift */; };
 		1143015D1AFF0319005581AE /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1143015C1AFF0319005581AE /* SideMenu.swift */; };
+		114301601B008E29005581AE /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1143015F1B008E29005581AE /* settings.png */; };
+		114301621B009138005581AE /* ParseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114301611B009138005581AE /* ParseService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +80,8 @@
 		112A513D1AFDF41C004FA5C3 /* NotesPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesPageController.swift; sourceTree = "<group>"; };
 		1143015A1AFEFDA8005581AE /* SideMenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuTable.swift; sourceTree = "<group>"; };
 		1143015C1AFF0319005581AE /* SideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
+		1143015F1B008E29005581AE /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = img/settings.png; sourceTree = "<group>"; };
+		114301611B009138005581AE /* ParseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +141,7 @@
 		112A50F51AFCABD4004FA5C3 /* NoteSwift */ = {
 			isa = PBXGroup;
 			children = (
+				1143015E1B008E1E005581AE /* img */,
 				112A50F81AFCABD4004FA5C3 /* AppDelegate.swift */,
 				112A50FA1AFCABD4004FA5C3 /* LoginPageController.swift */,
 				112A51181AFCB9F8004FA5C3 /* RegisterPageController.swift */,
@@ -147,6 +152,7 @@
 				112A50F61AFCABD4004FA5C3 /* Supporting Files */,
 				1143015A1AFEFDA8005581AE /* SideMenuTable.swift */,
 				1143015C1AFF0319005581AE /* SideMenu.swift */,
+				114301611B009138005581AE /* ParseService.swift */,
 			);
 			path = NoteSwift;
 			sourceTree = "<group>";
@@ -198,6 +204,14 @@
 				112A511B1AFDD1EE004FA5C3 /* Parse.framework */,
 			);
 			name = frameworks;
+			sourceTree = "<group>";
+		};
+		1143015E1B008E1E005581AE /* img */ = {
+			isa = PBXGroup;
+			children = (
+				1143015F1B008E29005581AE /* settings.png */,
+			);
+			name = img;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,6 +294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				114301601B008E29005581AE /* settings.png in Resources */,
 				112A50FE1AFCABD4004FA5C3 /* Main.storyboard in Resources */,
 				112A51031AFCABD4004FA5C3 /* LaunchScreen.xib in Resources */,
 				112A51001AFCABD4004FA5C3 /* Images.xcassets in Resources */,
@@ -301,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				112A50FB1AFCABD4004FA5C3 /* LoginPageController.swift in Sources */,
+				114301621B009138005581AE /* ParseService.swift in Sources */,
 				112A51191AFCB9F8004FA5C3 /* RegisterPageController.swift in Sources */,
 				1143015B1AFEFDA8005581AE /* SideMenuTable.swift in Sources */,
 				1143015D1AFF0319005581AE /* SideMenu.swift in Sources */,

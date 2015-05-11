@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class NotesPageController: UIViewController, SideMenuDelegate {
+class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegate{
    
     var sideMenu:SideMenu = SideMenu()
     var notes: Array<String> = []
@@ -21,72 +21,38 @@ class NotesPageController: UIViewController, SideMenuDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.indicator.center = self.view.center
         self.indicator.hidesWhenStopped = true
         self.indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         view.addSubview(self.indicator)
         self.indicator.startAnimating()
-        
-        if checkLogin(){
-            getNotes()
+        self.NoteView.delegate = self
+        if ParseService.sharedInstance.checkLogin(){
+            ParseService.sharedInstance.getNotes{
+                res in
+                println("View Controller: \(res)")
+                self.notes = res
+                self.sideMenu = SideMenu(sourceView: self.view, menuItems: self.notes)
+                self.sideMenu.delegate = self
+                self.indicator.stopAnimating()
+            }
         }else{
-            println("You need to Login!!!")
+            self.indicator.stopAnimating()
+            var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
+            self.presentViewController(vc, animated: true, completion: nil)
         }
-        
-
     }
+    
+    @IBAction func doneClicked(sender: AnyObject) {
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func logoutClicked(sender: AnyObject) {
-        PFUser.logOut()
-        checkLogin()
-    }
     
-    func checkLogin()-> Bool{
-        var currentUser = PFUser.currentUser()
-        println(currentUser)
-        if (currentUser != nil){
-            // Do stuff with the user
-            println("You are already login!!!")
-            self.indicator.stopAnimating()
-            return true
-        } else {
-            // Show the signup or login screen
-            println("You are not login yet!!!")
-            PFUser.logOut()
-            self.indicator.stopAnimating()
-            var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
-            self.presentViewController(vc, animated: true, completion: nil)
-            return false
-        }
-    }
     @IBAction func newNoteClicked(sender: AnyObject) {
-
-        // Create the alert controller
-        var alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
-        
-        // Create the actions
-        var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            UIAlertAction in
-            self.saveNote()
-        }
-        var cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
-            UIAlertAction in
-            println("Cancel Pressed")
-        }
-        
-        // Add the actions
-        alertController.addAction(okAction)
-        alertController.addAction(cancelAction)
-        alertController.addTextFieldWithConfigurationHandler(addTextField)
-        
-        // Present the controller
-        self.presentViewController(alertController, animated: true, completion: nil)
         
     }
     func addTextField(textField: UITextField!){
@@ -142,6 +108,7 @@ class NotesPageController: UIViewController, SideMenuDelegate {
                 self.NoteView.text = self.notes[self.notes.count - 1]
                 self.sideMenu = SideMenu(sourceView: self.view, menuItems: self.notes)
                 self.sideMenu.delegate = self
+                self.indicator.stopAnimating()
             } else {
                 // Log details of the failure
                 println("Error: \(error!) \(error!.userInfo!)")
@@ -151,7 +118,56 @@ class NotesPageController: UIViewController, SideMenuDelegate {
     
     func didSelectSideMenuRow(indexPath: NSIndexPath) {
         println(indexPath.row)
-        println(notes[indexPath.row])
+        println("selected note: \(notes[indexPath.row])")
         NoteView.text = notes[indexPath.row]
+        self.sideMenu.showSideMenu(false)
+        self.sideMenu.delegate?.sideBarWillClose?()
+        println("selected note2: \(NoteView.text)")
+    }
+    
+    func logout(){
+        PFUser.logOut()
+        if ParseService.sharedInstance.checkLogin() {
+            var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
+            self.presentViewController(vc, animated: true, completion: nil)
+        }
+    }
+    
+    func addNote(){
+        // Create the alert controller
+        var alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
+        
+        // Create the actions
+        var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+            UIAlertAction in
+            ParseService.sharedInstance.saveNote(self.newWordField!.text)
+        }
+        var cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
+            UIAlertAction in
+            println("Cancel Pressed")
+        }
+        
+        // Add the actions
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        alertController.addTextFieldWithConfigurationHandler(addTextField)
+        
+        // Present the controller
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    func sideBarWillOpen(){
+        println("sideBarWillOpen")
+        self.NoteView.resignFirstResponder()
+    }
+    func sideBarWillClose(){
+        println("sideBarWillClose")
+        self.NoteView.resignFirstResponder()
+    }
+    
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        println("TExt is edited...")
+        self.sideMenu.showSideMenu(false)
+        self.sideMenu.delegate?.sideBarWillClose?()
+        return true
     }
 }
