@@ -8,13 +8,19 @@
 
 import UIKit
 
+@objc protocol SideMenuDelegate{
+    func didSelectSideMenuRow(indexPath:NSIndexPath)
+    optional func sideBarWillClose()
+    optional func sideBarWillOpen()
+}
+
 class SideMenu: NSObject, SideMenuDelegate {
     
-    let barWidth:CGFloat = 150.0
+    let barWidth:CGFloat = 200.0
     let sideBarTableTopInset:CGFloat = 64.0
     let sideBarContainerView:UIView = UIView()
     let sideMenuTable:SideMenuTable = SideMenuTable()
-    let originView:UIView!
+    var originView:UIView?
     
     var animator:UIDynamicAnimator!
     var delegate: SideMenuDelegate?
@@ -30,25 +36,25 @@ class SideMenu: NSObject, SideMenuDelegate {
         sideMenuTable.tableData = menuItems
         
         setupSideMenu()
-        animator = UIDynamicAnimator(referenceView: originView)
+        animator = UIDynamicAnimator(referenceView: originView!)
         
         let showGestureRecognizer:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "handleSwipe:")
         showGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Right
-        originView.addGestureRecognizer(showGestureRecognizer)
+        originView!.addGestureRecognizer(showGestureRecognizer)
         
         let hideGestureRecognizer:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "handleSwipe:")
         hideGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Left
-        originView.addGestureRecognizer(hideGestureRecognizer)
+        originView!.addGestureRecognizer(hideGestureRecognizer)
         
     }
     
     func setupSideMenu(){
-        sideBarContainerView.frame = CGRectMake(-barWidth - 1 , originView.frame.origin.y, barWidth, originView.frame.size.height)
+        sideBarContainerView.frame = CGRectMake(0 , originView!.frame.origin.y, barWidth, originView!.frame.size.height)
         sideBarContainerView.backgroundColor = UIColor.clearColor()
         sideBarContainerView.clipsToBounds = false
-        originView.addSubview(sideBarContainerView)
+        originView!.addSubview(sideBarContainerView)
         
-        let blurView: UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Light))
+        let blurView: UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
         blurView.frame = sideBarContainerView.bounds
         sideBarContainerView.addSubview(blurView)
         sideMenuTable.delegate = self
@@ -56,6 +62,7 @@ class SideMenu: NSObject, SideMenuDelegate {
         sideMenuTable.tableView.clipsToBounds = false
         sideMenuTable.tableView.backgroundColor = UIColor.clearColor()
         sideMenuTable.tableView.scrollsToTop = false
+        sideMenuTable.tableView.separatorColor = UIColor.clearColor()
         sideMenuTable.tableView.contentInset = UIEdgeInsetsMake(sideBarTableTopInset, 0, 0, 0)
         sideMenuTable.tableView.reloadData()
         sideBarContainerView.addSubview(sideMenuTable.tableView)
@@ -63,7 +70,7 @@ class SideMenu: NSObject, SideMenuDelegate {
     
     
     func didSelectSideMenuRow(indexPath: NSIndexPath) {
-        delegate?.didSelectSideMenuRow(indexPath.row)
+        delegate?.didSelectSideMenuRow(indexPath)
     }
     
     func handleSwipe(recognizer:UISwipeGestureRecognizer){
@@ -88,7 +95,7 @@ class SideMenu: NSObject, SideMenuDelegate {
         animator.addBehavior(gravityBehavior)
         
         let collisionBehavior:UICollisionBehavior = UICollisionBehavior(items: [sideBarContainerView])
-        collisionBehavior.addBoundaryWithIdentifier("SideBarBoundary", fromPoint: CGPointMake(boundaryX, 20), toPoint: CGPointMake(boundaryX, originView.frame.size.height))
+        collisionBehavior.addBoundaryWithIdentifier("SideBarBoundary", fromPoint: CGPointMake(boundaryX, 20), toPoint: CGPointMake(boundaryX, originView!.frame.size.height))
         animator.addBehavior(collisionBehavior)
         
         let pushBehavior: UIPushBehavior = UIPushBehavior(items: [sideBarContainerView], mode: UIPushBehaviorMode.Instantaneous)

@@ -8,8 +8,8 @@
 
 import UIKit
 
-protocol SideMenuDelegate{
-    func didSelectSideMenuRow(indexPath:NSIndexPath)
+@objc protocol SideMenuTableDelegate{
+    func sideMenuTableDidSelectRow(indexPath:NSIndexPath)
 }
 
 class SideMenuTable: UITableViewController {
@@ -18,13 +18,10 @@ class SideMenuTable: UITableViewController {
     var tableData: Array<String> = []
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-
-        
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
         return tableData.count
     }
 

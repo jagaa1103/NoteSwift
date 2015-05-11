@@ -9,10 +9,15 @@
 import UIKit
 import Parse
 
-class NotesPageController: UIViewController {
+class NotesPageController: UIViewController, SideMenuDelegate {
    
+    var sideMenu:SideMenu = SideMenu()
+    var notes: Array<String> = []
+    
     var indicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0,150,150)) as UIActivityIndicatorView
     @IBOutlet var newWordField: UITextField?
+    @IBOutlet weak var NoteView: UITextView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +28,13 @@ class NotesPageController: UIViewController {
         view.addSubview(self.indicator)
         self.indicator.startAnimating()
         
-        checkLogin()
+        if checkLogin(){
+            getNotes()
+        }else{
+            println("You need to Login!!!")
+        }
+        
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,13 +47,14 @@ class NotesPageController: UIViewController {
         checkLogin()
     }
     
-    func checkLogin(){
+    func checkLogin()-> Bool{
         var currentUser = PFUser.currentUser()
         println(currentUser)
         if (currentUser != nil){
             // Do stuff with the user
             println("You are already login!!!")
             self.indicator.stopAnimating()
+            return true
         } else {
             // Show the signup or login screen
             println("You are not login yet!!!")
@@ -50,6 +62,7 @@ class NotesPageController: UIViewController {
             self.indicator.stopAnimating()
             var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
             self.presentViewController(vc, animated: true, completion: nil)
+            return false
         }
     }
     @IBAction func newNoteClicked(sender: AnyObject) {
@@ -74,12 +87,14 @@ class NotesPageController: UIViewController {
         
         // Present the controller
         self.presentViewController(alertController, animated: true, completion: nil)
+        
     }
     func addTextField(textField: UITextField!){
         // add the text field and make the result global
         textField.placeholder = "Definition"
         self.newWordField = textField
     }
+
 
     func saveNote(){
         println("Saving your note...")
@@ -93,36 +108,50 @@ class NotesPageController: UIViewController {
             if (success) {
                 // The object has been saved.
                 println("note is saved... \(success)")
+                noteObject.fetch()
+                self.getNotes()
             } else {
                 // There was a problem, check error.description
                 println("note is not saved... \(error)")
             }
         }
-    }
 
-    @IBAction func getNotesClicked(sender: AnyObject) {
-        println("getting your notes...")
+    }
+    
+    func getNotes(){
         var currentUser = PFUser.currentUser()
-        
         var query = PFQuery(className:"Notes")
         query.whereKey("username", equalTo:currentUser!.username!)
         query.findObjectsInBackgroundWithBlock {
             (objects: [AnyObject]?, error: NSError?) -> Void in
-            
+            self.notes.removeAll(keepCapacity: false)
             if error == nil {
                 // The find succeeded.
                 println("Successfully retrieved \(objects!.count) notes.")
+                println("Successfully retrieved: \(objects!) notes.")
+                var noteObjects: AnyObject = objects as! AnyObject
+                println("noteObjects: \(noteObjects)")
                 // Do something with the found objects
                 if let objects = objects as? [PFObject] {
                     for object in objects {
                         var note = object.objectForKey("note") as! String
-                        println(note)
+                        self.notes.append(note)
                     }
                 }
+                println(self.notes)
+                self.NoteView.text = self.notes[self.notes.count - 1]
+                self.sideMenu = SideMenu(sourceView: self.view, menuItems: self.notes)
+                self.sideMenu.delegate = self
             } else {
                 // Log details of the failure
                 println("Error: \(error!) \(error!.userInfo!)")
             }
         }
+    }
+    
+    func didSelectSideMenuRow(indexPath: NSIndexPath) {
+        println(indexPath.row)
+        println(notes[indexPath.row])
+        NoteView.text = notes[indexPath.row]
     }
 }
