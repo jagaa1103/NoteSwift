@@ -32,6 +32,8 @@
 		112A513B1AFDE1E2004FA5C3 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 112A51381AFDE1E2004FA5C3 /* ParseFacebookUtils.framework */; };
 		112A513C1AFDE1E2004FA5C3 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 112A51391AFDE1E2004FA5C3 /* ParseFacebookUtilsV4.framework */; };
 		112A513E1AFDF41C004FA5C3 /* NotesPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112A513D1AFDF41C004FA5C3 /* NotesPageController.swift */; };
+		1143015B1AFEFDA8005581AE /* SideMenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1143015A1AFEFDA8005581AE /* SideMenuTable.swift */; };
+		1143015D1AFF0319005581AE /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1143015C1AFF0319005581AE /* SideMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,8 @@
 		112A51381AFDE1E2004FA5C3 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
 		112A51391AFDE1E2004FA5C3 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		112A513D1AFDF41C004FA5C3 /* NotesPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesPageController.swift; sourceTree = "<group>"; };
+		1143015A1AFEFDA8005581AE /* SideMenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuTable.swift; sourceTree = "<group>"; };
+		1143015C1AFF0319005581AE /* SideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,8 @@
 				112A50FF1AFCABD4004FA5C3 /* Images.xcassets */,
 				112A51011AFCABD4004FA5C3 /* LaunchScreen.xib */,
 				112A50F61AFCABD4004FA5C3 /* Supporting Files */,
+				1143015A1AFEFDA8005581AE /* SideMenuTable.swift */,
+				1143015C1AFF0319005581AE /* SideMenu.swift */,
 			);
 			path = NoteSwift;
 			sourceTree = "<group>";
@@ -296,6 +302,8 @@
 			files = (
 				112A50FB1AFCABD4004FA5C3 /* LoginPageController.swift in Sources */,
 				112A51191AFCB9F8004FA5C3 /* RegisterPageController.swift in Sources */,
+				1143015B1AFEFDA8005581AE /* SideMenuTable.swift in Sources */,
+				1143015D1AFF0319005581AE /* SideMenu.swift in Sources */,
 				112A513E1AFDF41C004FA5C3 /* NotesPageController.swift in Sources */,
 				112A50F91AFCABD4004FA5C3 /* AppDelegate.swift in Sources */,
 			);
