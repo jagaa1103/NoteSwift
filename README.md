@@ -1,6 +1,8 @@
 # NoteSwift
 Simple note app in Swift with Parse.
 
+support iPhone and AppleWatch
+
 Steps: 
 * Create project in XCode. (need to create Swift)
 * Add and connect to Parse. (Parse is nice to use iOS) more information about [Parse](http://www.parse.com)
