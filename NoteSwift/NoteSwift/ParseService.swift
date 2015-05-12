@@ -57,7 +57,6 @@ class ParseService: NSObject {
                 println("Successfully retrieved: \(objects!) notes.")
                 var noteObjects: AnyObject = objects as! AnyObject
                 println("noteObjects: \(noteObjects)")
-                // Do something with the found objects
                 if let objects = objects as? [PFObject] {
                     for object in objects {
                         var note = object.objectForKey("note") as! String
@@ -94,4 +93,7 @@ class ParseService: NSObject {
         }
     }
 
+    func updateNote(){
+        
+    }
 }

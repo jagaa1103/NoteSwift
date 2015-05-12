@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="LaW-Ly-ByC">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -38,7 +39,7 @@
                                     </mask>
                                 </variation>
                             </textView>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bre-WC-C1k">
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bre-WC-C1k">
                                 <rect key="frame" x="0.0" y="17" width="600" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -90,13 +91,13 @@
                                 <exclude reference="C8B-Oc-aau"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="14B-7z-JBs"/>
+                                <exclude reference="aNy-Ww-cPs"/>
+                                <exclude reference="hMd-ik-sKn"/>
                                 <exclude reference="JIC-3E-WKb"/>
                                 <exclude reference="jes-FL-3Xj"/>
                                 <exclude reference="wmw-tD-UtU"/>
                                 <exclude reference="xxv-c2-cpZ"/>
-                                <exclude reference="14B-7z-JBs"/>
-                                <exclude reference="aNy-Ww-cPs"/>
-                                <exclude reference="hMd-ik-sKn"/>
                                 <exclude reference="nUk-CI-ywO"/>
                             </mask>
                         </variation>
@@ -105,13 +106,13 @@
                                 <include reference="C8B-Oc-aau"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="14B-7z-JBs"/>
+                                <include reference="aNy-Ww-cPs"/>
+                                <include reference="hMd-ik-sKn"/>
                                 <include reference="JIC-3E-WKb"/>
                                 <include reference="jes-FL-3Xj"/>
                                 <include reference="wmw-tD-UtU"/>
                                 <include reference="xxv-c2-cpZ"/>
-                                <include reference="14B-7z-JBs"/>
-                                <include reference="aNy-Ww-cPs"/>
-                                <include reference="hMd-ik-sKn"/>
                                 <include reference="nUk-CI-ywO"/>
                             </mask>
                         </variation>

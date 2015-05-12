@@ -44,6 +44,7 @@ class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegat
     }
     
     @IBAction func doneClicked(sender: AnyObject) {
+        
     }
     
     

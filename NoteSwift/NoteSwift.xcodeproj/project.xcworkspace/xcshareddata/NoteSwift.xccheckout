@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>246B05CA-A34B-43D2-B86A-D7F22DA7CCDE</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>NoteSwift</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>842070D4D78A7D0FEC7E914E83EB4CEA598A2C80</key>
 		<string>https://github.com/jagaa1103/NoteSwift.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>NoteSwift/NoteSwift.xcodeproj/project.xcworkspace</string>
+	<string>NoteSwift/NoteSwift.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>842070D4D78A7D0FEC7E914E83EB4CEA598A2C80</key>
