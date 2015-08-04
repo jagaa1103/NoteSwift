@@ -10,5 +10,19 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "NoteSwift.ParseService.checkLogin (NoteSwift.ParseService)() -&gt; Swift.Bool:ParseService.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "rootViewController">
+            </PersistentString>
+            <PersistentString
+               value = "loginView">
+            </PersistentString>
+            <PersistentString
+               value = "currentUser">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

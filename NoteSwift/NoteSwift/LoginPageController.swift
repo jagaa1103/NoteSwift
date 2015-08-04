@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class LoginPageController: UIViewController{
+class LoginPageController: UIViewController, UITextFieldDelegate{
 
     @IBOutlet weak var usernameInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
@@ -18,21 +18,41 @@ class LoginPageController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        ParseService.sharedInstance.setLoginViewController(self)
         self.indicator.center = self.view.center
         self.indicator.hidesWhenStopped = true
         self.indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         view.addSubview(self.indicator)
+        self.passwordInput.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        login()
+        return true
+    }
 
     @IBAction func signinClicked(sender: AnyObject) {
+        login()
+    }
+    
+    func logOut(){
+        PFUser.logOut()
+    }
+    
+    @IBAction func signupClicked(sender: AnyObject) {
+        usernameInput.text = ""
+        passwordInput.text = ""
+        println("go to RegisterPage")
+        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("RegisterPage") as! RegisterPageController
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    
+    func login(){
         println("username: \(usernameInput.text)")
         println("password: \(passwordInput.text)")
         var username = usernameInput.text
@@ -46,38 +66,24 @@ class LoginPageController: UIViewController{
             PFUser.logInWithUsernameInBackground(username, password: password, block: {
                 (user, error) -> Void in
                 self.indicator.stopAnimating()
-
+                
                 if(user != nil){
                     var emailVerify = user!.objectForKey("emailVerified") as! NSNumber
                     println(emailVerify)
                     if(emailVerify == 1){
-                        var alert = UIAlertView(title: "Success", message: "Your login is successful", delegate: self, cancelButtonTitle: "OK")
-                        alert.show()
-                        self.dismissViewControllerAnimated(true, completion: nil)
+                        ParseService.sharedInstance.checkLogin()
                     }else{
                         var alert = UIAlertView(title: "Error", message: "Please confirm verify your account from your email", delegate: self, cancelButtonTitle: "OK")
                         alert.show()
-                        self.logOut()
+                        ParseService.sharedInstance.logout()
                     }
                 }else{
                     var alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
                     alert.show()
-                    self.logOut()
+                    ParseService.sharedInstance.logout()
                 }
             })
         }
-    }
-    
-    func logOut(){
-        PFUser.logOut()
-    }
-    
-    @IBAction func signupClicked(sender: AnyObject) {
-        usernameInput.text = ""
-        passwordInput.text = ""
-        println("go to RegisterPage")
-        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("RegisterPage") as! RegisterPageController
-        self.presentViewController(vc, animated: true, completion: nil)
     }
 }
 

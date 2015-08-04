@@ -16,6 +16,8 @@ class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegat
     
     var indicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0,0,150,150)) as UIActivityIndicatorView
     @IBOutlet var newWordField: UITextField?
+    @IBOutlet var loginNameField: UITextField?
+    @IBOutlet var loginPassField: UITextField?
     @IBOutlet weak var NoteView: UITextView!
     
     
@@ -26,24 +28,30 @@ class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegat
         self.indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         view.addSubview(self.indicator)
         self.indicator.startAnimating()
+        
+        ParseService.sharedInstance.setRootView(self)
+        buildSideMenu()
         self.NoteView.delegate = self
+
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         if ParseService.sharedInstance.checkLogin(){
-            ParseService.sharedInstance.getNotes{
-                res in
-                println("View Controller: \(res)")
-                self.notes = res
-                self.sideMenu = SideMenu(sourceView: self.view, menuItems: self.notes)
-                self.sideMenu.delegate = self
-                self.indicator.stopAnimating()
-            }
+            self.sideMenu.buildTable()
         }else{
             self.indicator.stopAnimating()
-            var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
-            self.presentViewController(vc, animated: true, completion: nil)
         }
     }
     
+    
+    func buildSideMenu(){
+        self.sideMenu = SideMenu(sourceView: self.view)
+        self.sideMenu.delegate = self
+        self.indicator.stopAnimating()
+    }
+    
     @IBAction func doneClicked(sender: AnyObject) {
+        println("DONE clicked")
         
     }
     
@@ -76,45 +84,13 @@ class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegat
                 // The object has been saved.
                 println("note is saved... \(success)")
                 noteObject.fetch()
-                self.getNotes()
+//                ParseService.sharedInstance.getNotes()
             } else {
                 // There was a problem, check error.description
                 println("note is not saved... \(error)")
             }
         }
 
-    }
-    
-    func getNotes(){
-        var currentUser = PFUser.currentUser()
-        var query = PFQuery(className:"Notes")
-        query.whereKey("username", equalTo:currentUser!.username!)
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [AnyObject]?, error: NSError?) -> Void in
-            self.notes.removeAll(keepCapacity: false)
-            if error == nil {
-                // The find succeeded.
-                println("Successfully retrieved \(objects!.count) notes.")
-                println("Successfully retrieved: \(objects!) notes.")
-                var noteObjects: AnyObject = objects as! AnyObject
-                println("noteObjects: \(noteObjects)")
-                // Do something with the found objects
-                if let objects = objects as? [PFObject] {
-                    for object in objects {
-                        var note = object.objectForKey("note") as! String
-                        self.notes.append(note)
-                    }
-                }
-                println(self.notes)
-                self.NoteView.text = self.notes[self.notes.count - 1]
-                self.sideMenu = SideMenu(sourceView: self.view, menuItems: self.notes)
-                self.sideMenu.delegate = self
-                self.indicator.stopAnimating()
-            } else {
-                // Log details of the failure
-                println("Error: \(error!) \(error!.userInfo!)")
-            }
-        }
     }
     
     func didSelectSideMenuRow(indexPath: NSIndexPath) {
@@ -124,14 +100,6 @@ class NotesPageController: UIViewController, UITextViewDelegate, SideMenuDelegat
         self.sideMenu.showSideMenu(false)
         self.sideMenu.delegate?.sideBarWillClose?()
         println("selected note2: \(NoteView.text)")
-    }
-    
-    func logout(){
-        PFUser.logOut()
-        if ParseService.sharedInstance.checkLogin() {
-            var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
-            self.presentViewController(vc, animated: true, completion: nil)
-        }
     }
     
     func addNote(){

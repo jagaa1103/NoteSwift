@@ -16,6 +16,9 @@ class ParseService: NSObject {
     var currentUser: PFUser?
     var allNotes: Array<String> = []
     
+    var rootViewController: UIViewController?
+    var loginView: UIViewController?
+    
     class var sharedInstance: ParseService {
         struct Static {
             static var instance: ParseService?
@@ -31,14 +34,27 @@ class ParseService: NSObject {
         super.init()
     }
     
+    func setRootView(controller:UIViewController){
+        self.rootViewController = controller
+    }
+    
+    func setLoginViewController(controller:UIViewController){
+        self.loginView = controller
+    }
+    
     
     func checkLogin()-> Bool{
         currentUser = PFUser.currentUser()
         if (currentUser != nil){
             println("You are already login!!!")
+            loginView?.dismissViewControllerAnimated(true, completion: nil)
             return true
         } else {
             println("You are not login yet!!!")
+            var vc = rootViewController!.storyboard?.instantiateViewControllerWithIdentifier("LoginPage") as! LoginPageController
+            rootViewController!.presentViewController(vc, animated: true, completion: nil)
+//            rootViewController!.view.addSubview(vc.view)
+//            rootViewController!.addChildViewController(vc)
             return false
         }
     }
@@ -46,29 +62,31 @@ class ParseService: NSObject {
     func getNotes(completionHandler: (Array<String>) -> ()){
         var currentUser = PFUser.currentUser()
         var query = PFQuery(className:"Notes")
-        query.whereKey("username", equalTo:currentUser!.username!)
-        
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [AnyObject]?, error: NSError?) -> Void in
-            self.allNotes.removeAll(keepCapacity: false)
-            if error == nil {
-                // The find succeeded.
-                println("Successfully retrieved \(objects!.count) notes.")
-                println("Successfully retrieved: \(objects!) notes.")
-                var noteObjects: AnyObject = objects as! AnyObject
-                println("noteObjects: \(noteObjects)")
-                if let objects = objects as? [PFObject] {
-                    for object in objects {
-                        var note = object.objectForKey("note") as! String
-                        self.allNotes.append(note)
+        if(currentUser != nil){
+            query.whereKey("username", equalTo:currentUser!.username!)
+            
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [AnyObject]?, error: NSError?) -> Void in
+                self.allNotes.removeAll(keepCapacity: false)
+                if error == nil {
+                    // The find succeeded.
+                    println("Successfully retrieved \(objects!.count) notes.")
+                    println("Successfully retrieved: \(objects!) notes.")
+                    var noteObjects: AnyObject = objects as! AnyObject
+                    println("noteObjects: \(noteObjects)")
+                    if let objects = objects as? [PFObject] {
+                        for object in objects {
+                            var note = object.objectForKey("note") as! String
+                            self.allNotes.append(note)
+                        }
                     }
+                    completionHandler(self.allNotes)
+                    //                return self.allNotes
+                } else {
+                    // Log details of the failure
+                    println("Error: \(error!) \(error!.userInfo!)")
+                    //                return nil
                 }
-                completionHandler(self.allNotes)
-//                return self.allNotes
-            } else {
-                // Log details of the failure
-                println("Error: \(error!) \(error!.userInfo!)")
-//                return nil
             }
         }
     }
@@ -94,6 +112,10 @@ class ParseService: NSObject {
     }
 
     func updateNote(){
-        
+    }
+    
+    func logout(){
+        PFUser.logOut()
+        checkLogin()
     }
 }

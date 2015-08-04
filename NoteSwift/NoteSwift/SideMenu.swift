@@ -31,10 +31,9 @@ class SideMenu: NSObject, SideMenuDelegate {
         super.init()
     }
     
-    init(sourceView:UIView, menuItems:Array<String>) {
+    init(sourceView:UIView) {
         super.init()
         originView = sourceView
-        sideMenuTable.tableData = menuItems
         
         setupSideMenu()
         
@@ -63,14 +62,9 @@ class SideMenu: NSObject, SideMenuDelegate {
         let blurView: UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Light))
         blurView.frame = sideBarContainerView.bounds
         sideBarContainerView.addSubview(blurView)
-        sideMenuTable.delegate = self
-        sideMenuTable.tableView.frame = CGRectMake(0 , originView!.frame.origin.y, sideBarContainerView.frame.width, sideBarContainerView.frame.height - 40)
-        sideMenuTable.tableView.clipsToBounds = false
-        sideMenuTable.tableView.backgroundColor = UIColor.clearColor()
-        sideMenuTable.tableView.scrollsToTop = false
-        sideMenuTable.tableView.separatorColor = UIColor.clearColor()
-        sideMenuTable.tableView.contentInset = UIEdgeInsetsMake(sideBarTableTopInset, 0, 0, 0)
+        buildTable()
         sideMenuTable.tableView.reloadData()
+        
         sideBarContainerView.addSubview(sideMenuTable.tableView)
         sideBarFooter.frame = CGRectMake(0 , sideBarContainerView.frame.height-40, sideBarContainerView.frame.width, 40)
         sideBarFooter.backgroundColor = UIColor.brownColor()
@@ -88,6 +82,22 @@ class SideMenu: NSObject, SideMenuDelegate {
 
     }
     
+    func buildTable(){
+        ParseService.sharedInstance.getNotes{res in
+            self.sideMenuTable.tableData = res
+        }
+        sideMenuTable.delegate = self
+        sideMenuTable.tableView.frame = CGRectMake(0 , originView!.frame.origin.y, sideBarContainerView.frame.width, sideBarContainerView.frame.height - 40)
+        sideMenuTable.tableView.clipsToBounds = false
+        sideMenuTable.tableView.backgroundColor = UIColor.clearColor()
+        sideMenuTable.tableView.scrollsToTop = false
+        sideMenuTable.tableView.separatorColor = UIColor.clearColor()
+        sideMenuTable.tableView.contentInset = UIEdgeInsetsMake(sideBarTableTopInset, 0, 0, 0)
+    }
+    
+    func removeTable(){
+        sideMenuTable.removeFromParentViewController()
+    }
     
     func didSelectSideMenuRow(indexPath: NSIndexPath) {
         delegate?.didSelectSideMenuRow(indexPath)
@@ -125,11 +135,10 @@ class SideMenu: NSObject, SideMenuDelegate {
         let sideBarBehavior:UIDynamicItemBehavior = UIDynamicItemBehavior(items: [sideBarContainerView])
         sideBarBehavior.elasticity = 0.3
         animator.addBehavior(sideBarBehavior)
-        
     }
     
     func settingsBtnClicked(sender:UIButton!){
         println("Settings Button Clicked!!!")
+        ParseService.sharedInstance.logout()
     }
-
 }
